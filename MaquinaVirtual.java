@@ -90,8 +90,8 @@ public class MaquinaVirtual
     int contEntityG=0, contEntityT=0, contEntityC=0;
     int contListG=0, contListT=0, contListC=0;
     
-    Memoria memGlobal = new Memoria();
-    MemoriaConstantes 
+    Memoria memGlobal;
+    MemoriaCte memCte;
     Stack<Memoria> memLocal = new Stack<Memoria>();
     
     int getType(int direccion)
@@ -243,38 +243,68 @@ public class MaquinaVirtual
         {
             mvdir = TIPO_LIST;
         }
-        //LOCALES CONSTANTES
-        else if(direccion >= 36000 && direccion <= 36999)
-        {
-            mvdir = TIPO_INT;
-        }
-        else if(direccion >= 37000 && direccion <= 37999)
-        {
-            mvdir = TIPO_FLOAT;
-        }
-        else if(direccion >= 38000 && direccion <= 38999)
-        {
-            mvdir = TIPO_POS;
-        }
-        else if(direccion >= 39000 && direccion <= 39999)
-        {
-            mvdir = TIPO_STRING;
-        }
-        else if(direccion >= 40000 && direccion <= 40999)
-        {
-            mvdir = TIPO_BOOLEAN;
-        }
-        else if(direccion >= 41000 && direccion <= 41999)
-        {
-            mvdir = TIPO_ENTITY;
-        }
-        else if(direccion >= 42000 && direccion <= 42999)
-        {
-            mvdir = TIPO_LIST;
-        }
         return mvdir;
     }
     
+    public static float getValueFloat(direccion){
+        //global variable int
+        if(direccion >= OFFSET_GLOBAL_VAR_INT && direccion < OFFSET_GLOBAL_VAR_FLOAT)
+        {
+            return memGlobal.varInt[direccion - OFFSET_GLOBAL_VAR_INT];
+        }
+        //global variable float
+        else if(direccion >= OFFSET_GLOBAL_VAR_FLOAT && direccion < OFFSET_GLOBAL_VAR_POS)
+        {
+            return memGlobal.varFloat[direccion - OFFSET_GLOBAL_VAR_FLOAT];
+        }
+        //global temporal int
+        else if(direccion >= OFFSET_GLOBAL_TEMP_INT && direccion < OFFSET_GLOBAL_TEMP_FLOAT)
+        {
+            return memGlobal.tempInt[direccion - OFFSET_GLOBAL_TEMP_INT];
+        }
+        //global temporal float
+        else if(direccion >= OFFSET_GLOBAL_TEMP_FLOAT && direccion < OFFSET_GLOBAL_TEMP_POS)
+        {
+            return memGlobal.tempFloat[direccion - OFFSET_GLOBAL_TEMP_FLOAT];
+        }
+        //global constante int
+        else if(direccion >= OFFSET_GLOBAL_CTE_INT && direccion < OFFSET_GLOBAL_CTE_FLOAT)
+        {
+            return memCte.cteInt[direccion - OFFSET_GLOBAL_CTE_INT];
+        }
+        //global constante float
+        else if(direccion >= OFFSET_GLOBAL_CTE_FLOAT && direccion < OFFSET_GLOBAL_CTE_POS)
+        {
+            return memCte.cteFloat[direccion - OFFSET_GLOBAL_CTE_FLOAT];
+        }
+        //local variable int
+        else if(direccion >= OFFSET_LOCAL_VAR_INT && direccion < OFFSET_LOCAL_VAR_FLOAT)
+        {
+            Memoria estaMem = memLocal.peek();
+            return estaMem.varInt[direccion - OFFSET_LOCAL_VAR_INT];
+        }
+        //local variable float
+        else if(direccion >= OFFSET_LOCAL_VAR_FLOAT && direccion < OFFSET_LOCAL_VAR_POS)
+        {
+            Memoria estaMem = memLocal.peek();
+            return estaMem.varFloat[direccion - OFFSET_LOCAL_VAR_FLOAT];
+        }
+        //local temporal int
+        else if(direccion >= OFFSET_LOCAL_TEMP_INT && direccion < OFFSET_LOCAL_TEMP_FLOAT)
+        {
+            Memoria estaMem = memLocal.peek();
+            return estaMem.varInt[direccion - OFFSET_LOCAL_TEMP_INT];
+        }
+        //local temporal float
+        else if(direccion >= OFFSET_LOCAL_TEMP_FLOAT && direccion < OFFSET_LOCAL_TEMP_POS)
+        {
+            Memoria estaMem = memLocal.peek();
+            return estaMem.varFloat[direccion - OFFSET_LOCAL_TEMP_FLOAT];
+        }
+    }
+    
+    
+
     public static void suma(int op1, int op2, int res){
         System.out.println("+");
         

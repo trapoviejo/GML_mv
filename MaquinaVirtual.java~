@@ -91,64 +91,66 @@ public class MaquinaVirtual
     int contListG=0, contListT=0, contListC=0;
     
     Memoria memGlobal;
-    MemoriaConstantes memConstantes;
+    MemoriaCte memCte;
     Stack<Memoria> memLocal = new Stack<Memoria>();
     
-    int getValue(int direccion)
+    int getType(int direccion)
     {
+        int mvdir = 0;
+        
         //GLOBALES VARIABLES
         if(direccion >= OFFSET_GLOBAL_VAR_INT && direccion < OFFSET_GLOBAL_VAR_FLOAT)
         {
-            return memGlobal.varInt[direccion - OFFSET_GLOBAL_VAR_INT];
+            return TIPO_INT;
         }
         else if(direccion < OFFSET_GLOBAL_VAR_POS)
         {
-            return memGlobal.varFloat[direccion - OFFSET_GLOBAL_VAR_FLOAT];
+            return TIPO_FLOAT;
         }
         else if(direccion < OFFSET_GLOBAL_VAR_STRING)
         {
-            return memGlobal.varPos[direccion - OFFSET_GLOBAL_VAR_POS];
+            return TIPO_POS;
         }
         else if(direccion < OFFSET_GLOBAL_VAR_BOOLEAN)
         {
-            return memGlobal.varString[direccion - OFFSET_GLOBAL_VAR_STRING];
+            return TIPO_STRING;
         }
         else if(direccion < OFFSET_GLOBAL_VAR_ENTITY)
         {
-            return memGlobal.varBoolean[direccion - OFFSET_GLOBAL_VAR_BOOLEAN];
+            return TIPO_BOOLEAN;
         }
         else if(direccion < OFFSET_GLOBAL_VAR_LIST)
         {
-            return memGlobal.varEntity[direccion - OFFSET_GLOBAL_VAR_ENTITY];
+            return TIPO_ENTITY;
         }
         else if(direccion < OFFSET_GLOBAL_TEMP_INT)
         {
-            return memGlobal.varList[direccion - OFFSET_GLOBAL_VAR_LIST];
+            return TIPO_LIST;
         }
         //GLOBALES TEMPORALES
-        else if(direccion < OFFSET_GLOBAL_TEMP_FLOAT)
+        else if(direccion >= 7000 && direccion <= 7999)
         {
-            return memGlobal.tempInt[direccion - OFFSET_GLOBAL_TEMP_INT];
+            mvdir = TIPO_INT;
         }
-        else if(direccion < OFFSET_GLOBAL_TEMP_POS)
+        else if(direccion >= 8000 && direccion <= 8999)
         {
-            return memGlobal.tempFloat[direccion - OFFSET_GLOBAL_TEMP_FLOAT];
+            mvdir = TIPO_FLOAT;
         }
-        else if(direccion < OFFSET_GLOBAL_TEMP_STRING)
+        else if(direccion >= 9000 && direccion <= 9999)
         {
-            return memGlobal.tempPos[direccion - OFFSET_GLOBAL_TEMP_POS];
+            mvdir = TIPO_POS;
         }
-        else if(direccion < OFFSET_GLOBAL_TEMP_STRING)
+        else if(direccion >= 10000 && direccion <= 10999)
         {
-            return memGlobal.tempPos[direccion - OFFSET_GLOBAL_TEMP_POS];
+            mvdir = TIPO_STRING;
         }
-        else if(direccion < OFFSET_GLOBAL_TEMP_STRING)
+        else if(direccion >= 11000 && direccion <= 11999)
         {
-            return memGlobal.tempPos[direccion - OFFSET_GLOBAL_TEMP_POS];
+            mvdir = TIPO_BOOLEAN;
         }
-        else if(direccion < OFFSET_GLOBAL_TEMP_STRING)
+        else if(direccion >= 12000 && direccion <= 12999)
         {
-            return memGlobal.tempPos[direccion - OFFSET_GLOBAL_TEMP_POS];
+            mvdir = TIPO_ENTITY;
         }
         else if(direccion >= 13000 && direccion <= 13999)
         {
@@ -238,35 +240,6 @@ public class MaquinaVirtual
             mvdir = TIPO_ENTITY;
         }
         else if(direccion >= 35000 && direccion <= 35999)
-        {
-            mvdir = TIPO_LIST;
-        }
-        //LOCALES CONSTANTES
-        else if(direccion >= 36000 && direccion <= 36999)
-        {
-            mvdir = TIPO_INT;
-        }
-        else if(direccion >= 37000 && direccion <= 37999)
-        {
-            mvdir = TIPO_FLOAT;
-        }
-        else if(direccion >= 38000 && direccion <= 38999)
-        {
-            mvdir = TIPO_POS;
-        }
-        else if(direccion >= 39000 && direccion <= 39999)
-        {
-            mvdir = TIPO_STRING;
-        }
-        else if(direccion >= 40000 && direccion <= 40999)
-        {
-            mvdir = TIPO_BOOLEAN;
-        }
-        else if(direccion >= 41000 && direccion <= 41999)
-        {
-            mvdir = TIPO_ENTITY;
-        }
-        else if(direccion >= 42000 && direccion <= 42999)
         {
             mvdir = TIPO_LIST;
         }
