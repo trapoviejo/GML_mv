@@ -40,6 +40,46 @@ public class MaquinaVirtual
     public static final int OP_PARAM = 21006;
     public static final int OP_GOSUB = 21007;
 
+    public static final int OFFSET_GLOBAL_VAR_INT       = 100;
+    public static final int OFFSET_GLOBAL_VAR_FLOAT     = 1000;
+    public static final int OFFSET_GLOBAL_VAR_POS       = 2000;
+    public static final int OFFSET_GLOBAL_VAR_STRING    = 3000;
+    public static final int OFFSET_GLOBAL_VAR_BOOLEAN   = 4000;
+    public static final int OFFSET_GLOBAL_VAR_ENTITY    = 5000;
+    public static final int OFFSET_GLOBAL_VAR_LIST      = 6000;
+
+    public static final int OFFSET_GLOBAL_TEMP_INT      = 7000;
+    public static final int OFFSET_GLOBAL_TEMP_FLOAT    = 8000;
+    public static final int OFFSET_GLOBAL_TEMP_POS      = 9000;
+    public static final int OFFSET_GLOBAL_TEMP_STRING   = 10000;
+    public static final int OFFSET_GLOBAL_TEMP_BOOLEAN  = 11000;
+    public static final int OFFSET_GLOBAL_TEMP_ENTITY   = 12000;
+    public static final int OFFSET_GLOBAL_TEMP_LIST     = 13000;
+
+    public static final int OFFSET_GLOBAL_CTE_INT       = 14000;
+    public static final int OFFSET_GLOBAL_CTE_FLOAT     = 15000;
+    public static final int OFFSET_GLOBAL_CTE_POS       = 16000;
+    public static final int OFFSET_GLOBAL_CTE_STRING    = 17000;
+    public static final int OFFSET_GLOBAL_CTE_BOOLEAN   = 18000;
+    public static final int OFFSET_GLOBAL_CTE_ENTITY    = 19000;
+    public static final int OFFSET_GLOBAL_CTE_LIST      = 20000;
+    
+    public static final int OFFSET_LOCAL_VAR_INT       = 21000;
+    public static final int OFFSET_LOCAL_VAR_FLOAT     = 22000;
+    public static final int OFFSET_LOCAL_VAR_POS       = 23000;
+    public static final int OFFSET_LOCAL_VAR_STRING    = 24000;
+    public static final int OFFSET_LOCAL_VAR_BOOLEAN   = 25000;
+    public static final int OFFSET_LOCAL_VAR_ENTITY    = 26000;
+    public static final int OFFSET_LOCAL_VAR_LIST      = 27000;
+
+    public static final int OFFSET_LOCAL_TEMP_INT      = 28000;
+    public static final int OFFSET_LOCAL_TEMP_FLOAT    = 29000;
+    public static final int OFFSET_LOCAL_TEMP_POS      = 30000;
+    public static final int OFFSET_LOCAL_TEMP_STRING   = 31000;
+    public static final int OFFSET_LOCAL_TEMP_BOOLEAN  = 32000;
+    public static final int OFFSET_LOCAL_TEMP_ENTITY   = 33000;
+    public static final int OFFSET_LOCAL_TEMP_LIST     = 34000;
+
 
     //global, temporal, constante
     int contIntG=0, contIntT=0, contIntC=0;
@@ -50,55 +90,42 @@ public class MaquinaVirtual
     int contEntityG=0, contEntityT=0, contEntityC=0;
     int contListG=0, contListT=0, contListC=0;
     
-    Vector enterosGlobales = new Vector();
-    Vector enterosLocales = new Vector();
-    Vector enterosTemporales = new Vector();
-    Vector enterosConstantes = new Vector();
+    Memoria memGlobal = new Memoria();
+    MemoriaConstantes 
+    Stack<Memoria> memLocal = new Stack<Memoria>();
     
-    Vector floatsGlobales = new Vector();
-    Vector floatsLocales = new Vector();
-    Vector floatsTemporales = new Vector();
-    Vector floatsConstantes = new Vector();
-    
-    Vector posGlobales = new Vector();
-    Vector posLocales = new Vector();
-    Vector posTemporales = new Vector();
-    Vector posConstantes = new Vector();
-
-    Stack pilaEjecucion = new Stack();
-
-    int getMVDir(int direccion)
+    int getType(int direccion)
     {
         int mvdir = 0;
         
         //GLOBALES VARIABLES
-        if(direccion >= 0 && direccion <= 999)
+        if(direccion >= OFFSET_GLOBAL_VAR_INT && direccion < OFFSET_GLOBAL_VAR_FLOAT)
         {
-            mvdir = TIPO_INT;
+            return TIPO_INT;
         }
-        else if(direccion >= 1000 && direccion <= 1999)
+        else if(direccion < OFFSET_GLOBAL_VAR_POS)
         {
-            mvdir = TIPO_FLOAT;
+            return TIPO_FLOAT;
         }
-        else if(direccion >= 2000 && direccion <= 2999)
+        else if(direccion < OFFSET_GLOBAL_VAR_STRING)
         {
-            mvdir = TIPO_POS;
+            return TIPO_POS;
         }
-        else if(direccion >= 3000 && direccion <= 3999)
+        else if(direccion < OFFSET_GLOBAL_VAR_BOOLEAN)
         {
-            mvdir = TIPO_STRING;
+            return TIPO_STRING;
         }
-        else if(direccion >= 4000 && direccion <= 4999)
+        else if(direccion < OFFSET_GLOBAL_VAR_ENTITY)
         {
-            mvdir = TIPO_BOOLEAN;
+            return TIPO_BOOLEAN;
         }
-        else if(direccion >= 5000 && direccion <= 5999)
+        else if(direccion < OFFSET_GLOBAL_VAR_LIST)
         {
-            mvdir = TIPO_ENTITY;
+            return TIPO_ENTITY;
         }
-        else if(direccion >= 6000 && direccion <= 6999)
+        else if(direccion < OFFSET_GLOBAL_TEMP_INT)
         {
-            mvdir = TIPO_LIST;
+            return TIPO_LIST;
         }
         //GLOBALES TEMPORALES
         else if(direccion >= 7000 && direccion <= 7999)
@@ -247,10 +274,14 @@ public class MaquinaVirtual
         }
         return mvdir;
     }
-
+    
+    public static void suma(int op1, int op2, int res){
+        System.out.println("+");
+        
+    }    
+    
     public static void main(String args[])throws IOException
     {
-    
         ArrayList<String> listaCuadruplos = new ArrayList<String>();
         //lee archivo, almacena cuadruplo en arraylist
         BufferedReader br = null;
@@ -264,9 +295,12 @@ public class MaquinaVirtual
                 //listaCuadruplos.add(sCurrentLine);
                 esteCuadruplo = sCurrentLine.split(" ");
                 int operador = Integer.parseInt(esteCuadruplo[0]);
+                int op1 = Integer.parseInt(esteCuadruplo[1]);
+                int op2 = Integer.parseInt(esteCuadruplo[2]);
+                int res = Integer.parseInt(esteCuadruplo[3]);
                 switch(operador){
                     case OP_SUMA:
-                        System.out.println("+");
+                        suma(op1, op2, res);
                         break;
                     case OP_RESTA:
                         System.out.println("-");
@@ -350,10 +384,6 @@ public class MaquinaVirtual
             {
                 ex.printStackTrace();
             }
-        }
-        for(int i=0; i < listaCuadruplos.size();i++)
-        {
-           // System.out.println(listaCuadruplos[i]);
         }
         
     }
