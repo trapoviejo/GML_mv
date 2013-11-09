@@ -246,7 +246,7 @@ public class MaquinaVirtual
         return mvdir;
     }
     
-    public static float getValueFloat(direccion){
+    public float getValueFloat(int direccion){
         //global variable int
         if(direccion >= OFFSET_GLOBAL_VAR_INT && direccion < OFFSET_GLOBAL_VAR_FLOAT)
         {
@@ -293,17 +293,80 @@ public class MaquinaVirtual
         else if(direccion >= OFFSET_LOCAL_TEMP_INT && direccion < OFFSET_LOCAL_TEMP_FLOAT)
         {
             Memoria estaMem = memLocal.peek();
-            return estaMem.varInt[direccion - OFFSET_LOCAL_TEMP_INT];
+            return estaMem.tempInt[direccion - OFFSET_LOCAL_TEMP_INT];
         }
         //local temporal float
         else if(direccion >= OFFSET_LOCAL_TEMP_FLOAT && direccion < OFFSET_LOCAL_TEMP_POS)
         {
             Memoria estaMem = memLocal.peek();
-            return estaMem.varFloat[direccion - OFFSET_LOCAL_TEMP_FLOAT];
+            return estaMem.tempFloat[direccion - OFFSET_LOCAL_TEMP_FLOAT];
         }
+        else return 0;
     }
     
-    
+    public Pos getValuePos(int direccion){
+        //global variable pos
+        if(direccion >= OFFSET_GLOBAL_VAR_POS && direccion < OFFSET_GLOBAL_VAR_STRING)
+        {
+            return memGlobal.varPos[direccion - OFFSET_GLOBAL_VAR_POS];
+        }
+        
+        //global temporal pos
+        else if(direccion >= OFFSET_GLOBAL_TEMP_POS && direccion < OFFSET_GLOBAL_TEMP_STRING)
+        {
+            return memGlobal.tempPos[direccion - OFFSET_GLOBAL_TEMP_POS];
+        }
+        //global constante pos
+        else if(direccion >= OFFSET_GLOBAL_CTE_POS && direccion < OFFSET_GLOBAL_CTE_STRING)
+        {
+            return memCte.ctePos[direccion - OFFSET_GLOBAL_CTE_POS];
+        }
+        //local variable pos
+        else if(direccion >= OFFSET_LOCAL_VAR_POS && direccion < OFFSET_LOCAL_VAR_STRING)
+        {
+            Memoria estaMem = memLocal.peek();
+            return estaMem.varPos[direccion - OFFSET_LOCAL_VAR_POS];
+        }
+        //local temporal pos
+        //else if(direccion >= OFFSET_LOCAL_TEMP_POS && direccion < OFFSET_LOCAL_TEMP_STRING)
+        
+        else{
+            Memoria estaMem = memLocal.peek();
+            return estaMem.varPos[direccion - OFFSET_LOCAL_TEMP_POS];
+        }
+    }
+
+    public int getValueInt(int direccion){
+        //global variable pos
+        if(direccion >= OFFSET_GLOBAL_VAR_INT && direccion < OFFSET_GLOBAL_VAR_FLOAT)
+        {
+            return memGlobal.varInt[direccion - OFFSET_GLOBAL_VAR_INT];
+        }
+        
+        //global temporal pos
+        else if(direccion >= OFFSET_GLOBAL_TEMP_INT && direccion < OFFSET_GLOBAL_TEMP_FLOAT)
+        {
+            return memGlobal.tempInt[direccion - OFFSET_GLOBAL_TEMP_INT];
+        }
+        //global constante pos
+        else if(direccion >= OFFSET_GLOBAL_CTE_INT && direccion < OFFSET_GLOBAL_CTE_FLOAT)
+        {
+            return memCte.cteInt[direccion - OFFSET_GLOBAL_CTE_INT];
+        }
+        //local variable pos
+        else if(direccion >= OFFSET_LOCAL_VAR_INT && direccion < OFFSET_LOCAL_VAR_FLOAT)
+        {
+            Memoria estaMem = memLocal.peek();
+            return estaMem.varInt[direccion - OFFSET_LOCAL_VAR_INT];
+        }
+        //local temporal pos
+        else if(direccion >= OFFSET_LOCAL_TEMP_INT && direccion < OFFSET_LOCAL_TEMP_FLOAT)
+        {
+            Memoria estaMem = memLocal.peek();
+            return estaMem.varInt[direccion - OFFSET_LOCAL_TEMP_INT];
+        }
+        else return 0;
+    }    
 
     public static void suma(int op1, int op2, int res){
         System.out.println("+");
